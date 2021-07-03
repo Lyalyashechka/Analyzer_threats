@@ -1,6 +1,6 @@
 #include "Analyzer.h"
 
-void Analyzer::startAnalyzing(const std::string &pathName, const unsigned &countThread)
+void Analyzer::startAnalyzing(const std::string &pathName, const unsigned &countThread) 
 {
     it_fspath = std::filesystem::directory_iterator(pathName);
     if (countThread == 0)
@@ -17,9 +17,9 @@ void Analyzer::analyzingOneFile(const std::filesystem::path &fileName)
     {
         countProcFiles++;
         if (fileName.extension() == ".js")
-            processingJSFile(file);
+            processingJSFile(file, fileName);
         else
-            processingANYFileOtherJS(file);
+            processingANYFileOtherJS(file, fileName);
     }
     else
     {
@@ -27,34 +27,45 @@ void Analyzer::analyzingOneFile(const std::filesystem::path &fileName)
     }
 }
 
-void Analyzer::processingJSFile(std::ifstream &file)
+AnalyzInformation Analyzer::getResultAnalyz()
+{
+    AnalyzInformation result{
+        countProcFiles,
+        countUNIXSus,
+        countMACSus,
+        countJSSus,
+        countErrors};
+    return result;
+}
+
+void Analyzer::processingJSFile(std::ifstream &file, const std::string &filename)
 {
     std::string line;
     while (getline(file, line))
     {
         if (line == JS_suspicious)
         {
-            std::cout << "JS_suspicious detected\n";
+            log_info_detected("JS_suspicious detected in %s", filename.c_str());
             countJSSus++;
             break; //по условию в 1 файле 1 тип угрозы
         }
     }
 }
 
-void Analyzer::processingANYFileOtherJS(std::ifstream &file)
+void Analyzer::processingANYFileOtherJS(std::ifstream &file, const std::string &filename)
 {
     std::string line;
     while (getline(file, line))
     {
         if (line == Unix_suspicious)
         {
-            std::cout << "Unix_suspicious detected\n";
+            log_info_detected("UNIX_suspicious detected in %s", filename.c_str());
             countUNIXSus++;
             break;
         }
         else if (line == macOS_suspicious)
         {
-            std::cout << "macOS_suspicious detected\n";
+            log_info_detected("macOS_suspicious detected in %s", filename.c_str());
             countMACSus++;
             break;
         }
@@ -93,4 +104,3 @@ std::filesystem::path Analyzer::getNextFileForAnalyzing()
     }
     return std::filesystem::path();
 }
-

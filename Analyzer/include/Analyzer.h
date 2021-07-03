@@ -8,16 +8,19 @@
 #include <thread>
 #include <iostream>
 #include <fstream>
-#include "searchingString.h"
 
-class Analyzer
+#include "searchingString.h"
+#include "config.h"
+#include "I_Analyzer.h"
+
+class Analyzer : public I_Analyzer
 {
 public:
-    void startAnalyzing(const std::string &pathName, const unsigned &countThread = 0);
+    void startAnalyzing(const std::string &pathName, const unsigned &countThread = 0) override;
 
     void analyzingOneFile(const std::filesystem::path &fileName);
 
-    void printByTask();
+    AnalyzInformation getResultAnalyz() override;
 
 private:
     void analyzingOneThread();
@@ -26,9 +29,9 @@ private:
 
     std::filesystem::path getNextFileForAnalyzing();
 
-    void processingJSFile(std::ifstream &file);
+    void processingJSFile(std::ifstream &file, const std::string &filename);
 
-    void processingANYFileOtherJS(std::ifstream &file);
+    void processingANYFileOtherJS(std::ifstream &file, const std::string &filename);
 
     std::mutex mtx;
     std::atomic<unsigned> countProcFiles{0};

@@ -11,9 +11,11 @@ ELSE()
 ENDIF()
 
 include_directories(Analyzer/include)
+include_directories(.)
 
 add_executable( scan_util 
                 Analyzer/src/Analyzer.cpp
+                config.h
                 main.cpp)
 
 target_link_libraries(scan_util -pthread)
