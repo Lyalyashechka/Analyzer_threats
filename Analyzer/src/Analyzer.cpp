@@ -1,6 +1,6 @@
 #include "Analyzer.h"
 
-void Analyzer::startAnalyzing(const std::string &pathName, const unsigned &countThread) 
+void Analyzer::startAnalyzing(const std::string &pathName, const unsigned &countThread)
 {
     it_fspath = std::filesystem::directory_iterator(pathName);
     if (countThread == 0)
@@ -35,6 +35,7 @@ AnalyzInformation Analyzer::getResultAnalyz()
         countMACSus,
         countJSSus,
         countErrors};
+    refreshCounters();
     return result;
 }
 
@@ -50,6 +51,7 @@ void Analyzer::processingJSFile(std::ifstream &file, const std::string &filename
             break; //по условию в 1 файле 1 тип угрозы
         }
     }
+    file.close();
 }
 
 void Analyzer::processingANYFileOtherJS(std::ifstream &file, const std::string &filename)
@@ -70,7 +72,9 @@ void Analyzer::processingANYFileOtherJS(std::ifstream &file, const std::string &
             break;
         }
     }
+    file.close();
 }
+
 void Analyzer::analyzingMultithread(const unsigned &countThread)
 {
     std::vector<std::thread> threadPool;
@@ -103,4 +107,13 @@ std::filesystem::path Analyzer::getNextFileForAnalyzing()
         return nextFile;
     }
     return std::filesystem::path();
+}
+
+void Analyzer::refreshCounters()
+{
+    countProcFiles = 0;
+    countUNIXSus = 0;
+    countMACSus = 0;
+    countJSSus = 0;
+    countErrors = 0;
 }

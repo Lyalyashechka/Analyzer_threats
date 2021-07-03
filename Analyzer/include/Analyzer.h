@@ -33,6 +33,8 @@ private:
 
     void processingANYFileOtherJS(std::ifstream &file, const std::string &filename);
 
+    void refreshCounters();
+    
     std::mutex mtx;
     std::atomic<unsigned> countProcFiles{0};
     std::atomic<unsigned> countUNIXSus{0};
