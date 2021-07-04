@@ -14,7 +14,7 @@ struct AnalyzInformation
 
 struct I_Analyzer
 {
-    virtual void startAnalyzing(const std::string &pathName, const unsigned &countThread = 0){};
+    virtual void startAnalyzing(const std::string &pathName, const unsigned &countThread = 0) = 0;
 
-    virtual AnalyzInformation getResultAnalyz(){};
+    virtual AnalyzInformation getResultAnalyz() = 0;
 };

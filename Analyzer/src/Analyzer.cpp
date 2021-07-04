@@ -20,6 +20,7 @@ void Analyzer::analyzingOneFile(const std::filesystem::path &fileName)
             processingJSFile(file, fileName);
         else
             processingANYFileOtherJS(file, fileName);
+        file.close();
     }
     else
     {
@@ -51,7 +52,6 @@ void Analyzer::processingJSFile(std::ifstream &file, const std::string &filename
             break; //по условию в 1 файле 1 тип угрозы
         }
     }
-    file.close();
 }
 
 void Analyzer::processingANYFileOtherJS(std::ifstream &file, const std::string &filename)
@@ -72,7 +72,6 @@ void Analyzer::processingANYFileOtherJS(std::ifstream &file, const std::string &
             break;
         }
     }
-    file.close();
 }
 
 void Analyzer::analyzingMultithread(const unsigned &countThread)
