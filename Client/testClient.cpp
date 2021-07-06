@@ -20,10 +20,16 @@ int main()
     std::shared_ptr<I_NetworkClient> nc(new NetworkClient());
 
     nc->startConnect(saun);
-    int error;
-    Message readed = nc->startRead(error);
+    // int error;
+    // Message readed = nc->startRead(error);
 
-    int r;
-    readed >> r;
-    std::cout << r;
+    // int r;
+    // readed >> r;
+    // std::cout << r;
+
+    Message msgForSend;
+    int test = 100500;
+    msgForSend << test;
+    nc->startSend(msgForSend);
+
 }

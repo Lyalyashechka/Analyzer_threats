@@ -10,5 +10,5 @@ struct I_NetworkClient
 
     virtual Message startRead(int &error) = 0;
 
-    virtual void startSend() = 0;
+    virtual void startSend(Message msg) = 0;
 };

@@ -27,16 +27,16 @@ public:
 
     Message startRead(int &error) override;
 
-    void startSend() override;
+    void startSend(Message msg) override;
 private:
 
     void readHeader(int &error);
 
     void readBody(uint32_t sizeBody, int &error);
 
-    void sendHeader();
+    void sendHeader(Message msg);
 
-    void sendBody();
+    void sendBody(Message msg);
 
     int socket_;
 

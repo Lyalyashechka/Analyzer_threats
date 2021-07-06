@@ -49,17 +49,20 @@ void NetworkClient::readBody(uint32_t sizeBody, int &error)
     }
 }
 
-void NetworkClient::startSend()
+void NetworkClient::startSend(Message msg)
 {
-
+    sendHeader(msg);
 }
 
-void NetworkClient::sendHeader()
+void NetworkClient::sendHeader(Message msg)
 {
-
+    std::cout<< msg.header.sizeMessage<<"\n\n\n";
+    int errorSend = send(socket_, &msg.header, sizeof(MessageHeader), 0);
+    std::cout<<errorSend;
+    sendBody(msg);
 }
 
-void NetworkClient::sendBody()
+void NetworkClient::sendBody(Message msg)
 {
-    
+    send(socket_, msg.body.data(), msg.header.sizeMessage, 0);
 }

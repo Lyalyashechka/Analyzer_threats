@@ -23,9 +23,10 @@ target_link_libraries(scan_util -pthread)
 
 
 include_directories(CommunicateProtocol/Message)
-include_directories(Daemon)
+include_directories(Daemon/Network/include)
 add_executable( server
-                Daemon/testServer.cpp)
+                Daemon/testServer.cpp
+                Daemon/Network/src/NetworkDaemon.cpp)
 
 
 add_executable( client
