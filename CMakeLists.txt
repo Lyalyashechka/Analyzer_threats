@@ -10,12 +10,24 @@ ELSE()
   message("Some other build type.")
 ENDIF()
 
-include_directories(Analyzer/include)
+include_directories(Daemon/Analyzer/include)
 include_directories(.)
-
+include_directories(Client/Network/include)
 add_executable( scan_util 
-                Analyzer/src/Analyzer.cpp
-                config.h
+                Daemon/Analyzer/src/Analyzer.cpp
                 main.cpp)
 
+   
 target_link_libraries(scan_util -pthread)
+
+
+
+include_directories(CommunicateProtocol/Message)
+include_directories(Daemon)
+add_executable( server
+                Daemon/testServer.cpp)
+
+
+add_executable( client
+                Client/testClient.cpp
+                Client/Network/src/NetworkClient.cpp)
