@@ -4,12 +4,16 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#include "AnalyzInformation.h"
+
+#define typeAnalyzInfo 0
+#define typeString     1
 
 struct MessageHeader
 {
-    int id;
+    int type;
 
-    uint32_t sizeMessage = 0;
+    size_t sizeStringData = 0;
 };
 
 
@@ -17,34 +21,14 @@ struct Message
 {
     MessageHeader header;
 
-    std::vector<uint8_t> body;
+    AnalyzInformation analyzData;
 
-    template<typename dataType>
-    friend Message& operator << (Message &msg, const dataType& data)
+    std::string stringData;
+
+    void setStringData(std::string string)
     {
-        size_t currentSize = msg.body.size();
+        stringData = string;
 
-        msg.body.resize(currentSize + sizeof(dataType));
-
-        memcpy(msg.body.data() + currentSize, &data, sizeof(dataType));
-
-        msg.header.sizeMessage = msg.body.size();
-
-        return msg;
-    } 
-
-
-    template<typename dataType>
-    friend Message& operator >> (Message &msg, dataType& data)
-    {
-        size_t newSize = msg.body.size() - sizeof(dataType);
-
-        memcpy(&data, msg.body.data() + newSize, sizeof(dataType));
-
-        msg.body.resize(newSize);
-
-        msg.header.sizeMessage = msg.body.size();
-
-        return msg;
+        header.sizeStringData = stringData.length();
     }
 };

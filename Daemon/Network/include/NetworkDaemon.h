@@ -8,13 +8,14 @@
 #include <iostream>
 
 #include "Message.h"
+#include "Analyzer.h"
 
-#define MaxCountConnection 10
+#define MaxCountConnection 1
 
 class NetworkDaemon
 {
 public:
-    NetworkDaemon();
+    NetworkDaemon(std::shared_ptr<I_Analyzer> &analyzer);
 
     NetworkDaemon(const NetworkDaemon &nd) = delete;
 
@@ -31,11 +32,11 @@ private:
 
     void readHeader();
 
-    void readBody(const uint32_t& sizeMessage);
+    void readBody(const size_t& sizeMessage);
 
-    void sendHeader();
+    void sendHeader(Message &msg);
 
-    void sendBody();
+    void sendBody(Message &msg);
 
     int socket_;
 
@@ -44,4 +45,6 @@ private:
     struct sockaddr_un addrConnnected_;
 
     Message readMessage_;
+
+    std::shared_ptr<I_Analyzer> analyzer_;
 };

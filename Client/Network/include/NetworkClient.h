@@ -32,7 +32,7 @@ private:
 
     void readHeader(int &error);
 
-    void readBody(uint32_t sizeBody, int &error);
+    void readBodyAnalyzInfo(int &error);
 
     void sendHeader(Message msg);
 

@@ -26,8 +26,9 @@ include_directories(CommunicateProtocol/Message)
 include_directories(Daemon/Network/include)
 add_executable( server
                 Daemon/testServer.cpp
-                Daemon/Network/src/NetworkDaemon.cpp)
-
+                Daemon/Network/src/NetworkDaemon.cpp
+                Daemon/Analyzer/src/Analyzer.cpp)
+                target_link_libraries(server -pthread)
 
 add_executable( client
                 Client/testClient.cpp

@@ -22,6 +22,7 @@ public:
 
     AnalyzInformation getResultAnalyz() override;
 
+
 private:
     void analyzingOneThread();
 

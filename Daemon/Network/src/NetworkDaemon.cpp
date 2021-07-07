@@ -1,8 +1,9 @@
 #include "NetworkDaemon.h"
 
-NetworkDaemon::NetworkDaemon()
+NetworkDaemon::NetworkDaemon(std::shared_ptr<I_Analyzer> &analyzer)
 {
     socket_ = socket(AF_UNIX, SOCK_STREAM, 0);
+    analyzer_ = analyzer;
 }
 
 NetworkDaemon::~NetworkDaemon()
@@ -22,7 +23,7 @@ void NetworkDaemon::waitAccept()
 {
     int len;
     addrAccept_ = accept(socket_, (struct sockaddr *)&addrConnnected_, (socklen_t *)&len);
-    
+
     onAccept();
     waitAccept();
 }
@@ -35,17 +36,28 @@ void NetworkDaemon::onAccept()
 void NetworkDaemon::readHeader()
 {
     read(addrAccept_, &readMessage_.header, sizeof(MessageHeader));
-    std::cout<<"readed sizeMessaeg "<<readMessage_.header.sizeMessage<<"\n\n\n";
-    readBody(readMessage_.header.sizeMessage);
+    readBody(readMessage_.header.sizeStringData);
 }
 
-void NetworkDaemon::readBody(const uint32_t& sizeMessage)
+void NetworkDaemon::readBody(const size_t &sizeMessage)
 {
-    std::cout<<"SizeBody:"<< sizeMessage<<"\n\n\n";
-    readMessage_.body.resize(readMessage_.header.sizeMessage);
-    read(addrAccept_, readMessage_.body.data(), sizeMessage);
-    std::cout<<"+readBody\n\n\n";
-    int test;
-    readMessage_ >> test;
-    std::cout << test <<"\n\n\n";
+    readMessage_.stringData.resize(sizeMessage);
+    read(addrAccept_, &readMessage_.stringData[0], sizeMessage);
+    analyzer_->startAnalyzing(readMessage_.stringData.c_str(), 4);
+    Message msgForSend;
+    msgForSend.analyzData = analyzer_->getResultAnalyz();
+    std::cout << readMessage_.stringData.c_str() << "\n\n\n";
+    sendHeader(msgForSend);
 }
+
+void NetworkDaemon::sendHeader(Message &msg)
+{   
+    send(addrAccept_, &msg.header, sizeof(MessageHeader), 0);
+    sendBody(msg);    
+}
+
+void NetworkDaemon::sendBody(Message &msg)
+{
+    send(addrAccept_, &msg.analyzData, sizeof(AnalyzInformation), 0);
+}
+
