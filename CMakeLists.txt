@@ -13,12 +13,10 @@ ENDIF()
 include_directories(Daemon/Analyzer/include)
 include_directories(.)
 include_directories(Client/Network/include)
-add_executable( scan_util 
-                Daemon/Analyzer/src/Analyzer.cpp
-                main.cpp)
+
 
    
-target_link_libraries(scan_util -pthread)
+
 
 
 
@@ -33,3 +31,9 @@ add_executable( server
 add_executable( client
                 Client/testClient.cpp
                 Client/Network/src/NetworkClient.cpp)
+
+                add_executable( Daemon
+                Daemon/Daemon.cpp
+                Daemon/Network/src/NetworkDaemon.cpp
+                Daemon/Analyzer/src/Analyzer.cpp)
+                target_link_libraries(Daemon -pthread)

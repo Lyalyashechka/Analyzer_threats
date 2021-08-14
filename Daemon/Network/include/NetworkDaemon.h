@@ -10,7 +10,7 @@
 #include "Message.h"
 #include "Analyzer.h"
 
-#define MaxCountConnection 1
+#define MaxCountConnection 10
 
 class NetworkDaemon
 {
@@ -24,9 +24,10 @@ public:
     ~NetworkDaemon();
 
     void start(struct sockaddr_un addrForStart);
-
-private:
+    
     void waitAccept();
+private:
+    
 
     void onAccept();
 

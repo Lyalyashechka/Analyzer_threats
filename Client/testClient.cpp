@@ -9,7 +9,7 @@
 #include "Message.h"
 #include "NetworkClient.h"
 
-#define ADDRESS "SEARCH"
+#define ADDRESS "search331"
 
 int main()
 {
