@@ -25,14 +25,13 @@ public:
 
     void disconnect() override;
 
-    Message startRead(int &error) override;
+    Message startRead() override;
 
     void startSend(Message msg) override;
 private:
+    void readHeader();
 
-    void readHeader(int &error);
-
-    void readBodyAnalyzInfo(int &error);
+    void readBodyAnalyzInfo();
 
     void sendHeader(Message msg);
 

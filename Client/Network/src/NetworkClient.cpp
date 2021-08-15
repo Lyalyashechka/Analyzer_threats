@@ -25,6 +25,11 @@ void printAnalyzResult(const AnalyzInformation &res, const long long &ms)
 NetworkClient::NetworkClient()
 {
     socket_ = socket(AF_UNIX, SOCK_STREAM, 0);
+    if (socket_ < 0)
+    {
+        std::cerr<<"Error in create socket \n";
+        exit(1);
+    }
 }
 
 NetworkClient::~NetworkClient()
@@ -35,7 +40,11 @@ NetworkClient::~NetworkClient()
 void NetworkClient::startConnect(struct sockaddr_un addrConnect)
 {
     int len = sizeof(addrConnect.sun_family) + strlen(addrConnect.sun_path);
-    connect(socket_, (struct sockaddr *)&addrConnect, (socklen_t)len);
+    if (connect(socket_, (struct sockaddr *)&addrConnect, (socklen_t)len) < 0)
+    {
+        std::cerr << "Error in connect\n";
+        exit(1);
+    }
 }
 
 void NetworkClient::disconnect()
@@ -43,27 +52,30 @@ void NetworkClient::disconnect()
     close(socket_);
 }
 
-Message NetworkClient::startRead(int &error)
+Message NetworkClient::startRead()
 {
-    readHeader(error);
+    readHeader();
     return readMessage_;
 }
 
-void NetworkClient::readHeader(int &error)
+void NetworkClient::readHeader()
 {
-    if ((error = read(socket_, &readMessage_.header, sizeof(MessageHeader))) < 0)
+    if (read(socket_, &readMessage_.header, sizeof(MessageHeader)) < 0)
     {
-        std::cout << "Error in readHeader\n";
+        std::cerr << "Error in read answer\n";
+        disconnect();
+        exit(1);
         return;
     }
-    readBodyAnalyzInfo(error);
+    readBodyAnalyzInfo();
 }
 
-void NetworkClient::readBodyAnalyzInfo(int &error)
+void NetworkClient::readBodyAnalyzInfo()
 {
-    if ((error = read(socket_, &readMessage_.analyzData, sizeof(AnalyzInformation))) < 0)
+    if (read(socket_, &readMessage_.analyzData, sizeof(AnalyzInformation)) < 0)
     {
-        std::cout << "Error in readBody\n";
+        std::cerr << "Error in read answer\n";
+        exit(1);
         return;
     }
     printAnalyzResult(readMessage_.analyzData, 88800555);
@@ -71,19 +83,27 @@ void NetworkClient::readBodyAnalyzInfo(int &error)
 
 void NetworkClient::startSend(Message msg)
 {
-
     sendHeader(msg);
 }
 
 void NetworkClient::sendHeader(Message msg)
 {
-    int errorSend = send(socket_, &msg.header, sizeof(MessageHeader), 0);
+    if (send(socket_, &msg.header, sizeof(MessageHeader), 0) < 0)
+    {
+        std::cerr << "Error in send message header\n";
+        disconnect();
+        exit(1);
+    }
     sendBody(msg);
 }
 
 void NetworkClient::sendBody(Message msg)
 {
-    send(socket_, msg.stringData.c_str(), msg.header.sizeStringData, 0);
-    int error;
-    startRead(error);
+    if (send(socket_, msg.stringData.c_str(), msg.header.sizeStringData, 0) < 0)
+    {
+        std::cerr << "Error in send message body\n";
+        disconnect();
+        exit(1);
+    }
+    startRead();
 }
