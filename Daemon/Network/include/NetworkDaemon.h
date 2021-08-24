@@ -19,21 +19,20 @@ public:
 
     NetworkDaemon(const NetworkDaemon &nd) = delete;
 
-    NetworkDaemon& operator=(const NetworkDaemon &nd) = delete;
-    
+    NetworkDaemon &operator=(const NetworkDaemon &nd) = delete;
+
     ~NetworkDaemon();
 
     void start(struct sockaddr_un addrForStart);
-    
-    void waitAccept();
-private:
-    
 
+    void waitAccept();
+
+private:
     void onAccept();
 
     void readHeader();
 
-    void readBody(const size_t& sizeMessage);
+    void readBody(const size_t &sizeMessage);
 
     void sendHeader(Message &msg);
 

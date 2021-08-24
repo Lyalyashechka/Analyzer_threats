@@ -36,25 +36,17 @@ static void skeleton_daemon()
         exit(0);
     }
 
-    /* Open the log file */
 }
 
 int main()
 {
-
-
     Analyzer an;
     auto ptr = std::shared_ptr<I_Analyzer>(&an);
     NetworkDaemon nd(ptr);
-
-
     struct sockaddr_un saun;
-
     nd.start(saun);
     skeleton_daemon();
-
     nd.waitAccept();
     closelog();
-
     return EXIT_SUCCESS;
 }

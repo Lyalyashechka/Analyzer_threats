@@ -13,6 +13,8 @@
 
 int main()
 {
+    std::string FOLDER_FOR_ANALYZE = "/home/lyalyashechka/kasper/SearchThreats/testDirs";
+
     struct sockaddr_un saun;
     saun.sun_family = AF_UNIX;
     strcpy(saun.sun_path, ADDRESS);
@@ -21,8 +23,8 @@ int main()
 
     nc->startConnect(saun);
     Message msgForSend;
-    std::string buf_test = "/home/lyalyashechka/kasper/SearchThreats/testDirs";
-    msgForSend.setStringData(buf_test);
+
+    msgForSend.setStringData(FOLDER_FOR_ANALYZE);
     nc->startSend(msgForSend);
 
 }
